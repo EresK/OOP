@@ -20,13 +20,16 @@ public class Substring {
 
     /**
      * @param path - file path
-     * @param str - substring
+     * @param substring - searching substring
      * @return
      * -1 - empty substring
      * 0 - algorithm successfully end
      */
-    public int search(String path, char[] str) {
-        if (str.length < 1) return -1;
+    public int search(String path, String substring) {
+        if (path == null || substring == null) return -1;
+
+        char[] str = substring.toCharArray();
+        if (str.length == 0) return 0;
 
         char[] buffer = new char[str.length];
         int[] offset = new int[str.length];
@@ -68,6 +71,7 @@ public class Substring {
     }
 
     /**
+     * using Boyer-Moore-Horspool algorithm
      * @param buffer - current block in file
      * @param symNum - actual number of char in buffer
      * @param str - searching pattern
@@ -80,12 +84,12 @@ public class Substring {
     private int compare(char[] buffer, int symNum, char[] str, int[] offset) {
         if (symNum < str.length) return  -1;
 
-        for (int i = str.length -1; i >= 0; i--) {
+        for (int i = str.length - 1; i >= 0; i--) {
             if (str[i] != buffer[i]) {
                 for (int j = i - 1; j >= 0; j--) {
                     if(str[j] == buffer[i]) return offset[j];
                 }
-                return str.length;
+                return i + 1;
             }
         }
 
