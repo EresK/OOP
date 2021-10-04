@@ -1,81 +1,92 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 public class TestSubString {
 
     @Test
-    public void test1() {
+    public void testOneSymbol() throws Exception {
         Substring substr = new Substring();
         String path, pattern;
 
         path = "./src/test/resources/test1_2";
         pattern = "s";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(1, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(13), substr.list);
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[] {13};
+        Assertions.assertArrayEquals(test, arr);
     }
 
     @Test
-    public void test2() {
+    public void testEmptySubstring() throws Exception {
+        Substring substr = new Substring();
+        String path, pattern;
+
+        path = "./src/test/resources/test6";
+        pattern = "";
+
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[0];
+        Assertions.assertArrayEquals(test, arr);
+    }
+
+    @Test
+    public void testSubEntrance() throws Exception {
         Substring substr = new Substring();
         String path, pattern;
 
         path = "./src/test/resources/test1_2";
         pattern = "aabaab";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(5, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(0, 3, 6, 15, 18), substr.list);
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[] {0, 3, 6, 15, 18};
+        Assertions.assertArrayEquals(test, arr);
     }
 
     @Test
-    public void test3() {
+    public void testInnerSubEntrance() throws Exception {
         Substring substr = new Substring();
         String path, pattern;
 
-        path = "./src/test/resources/test3";
+        path = "./src/test/resources/test3"; // contain "aalaabaab"... fragment
         pattern = "aabaab";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(4, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(3, 6, 15, 18), substr.list);
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[] {3, 6, 15, 18};
+        Assertions.assertArrayEquals(test, arr);
     }
 
     @Test
-    public void test4() {
+    public void testRussianLanguage() throws Exception {
         Substring substr = new Substring();
         String path, pattern;
 
         path = "./src/test/resources/test4";
         pattern = "Где-то там моя Подстрока ╚══╝";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(1, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(100), substr.list);
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[] {100};
+        Assertions.assertArrayEquals(test, arr);
     }
 
     @Test
-    public void test5() {
+    public void testUnicodeSymbols() throws Exception {
         Substring substr = new Substring();
         String path, pattern;
 
         path = "./src/test/resources/test5";
         pattern = "ここにいるよ! मैं यहां हूं";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(1, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(346147), substr.list);
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[] {346147};
+        Assertions.assertArrayEquals(test, arr);
     }
 
     @Test
-    public void test6() {
+    public void testBigFile() throws Exception {
         Substring substr = new Substring();
         String path, pattern;
 
-        path = "./src/test/resources/test6";
+        path = "./src/test/resources/test6"; // ~ 50MB
         pattern = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
                 "sed do eiusmod tempor incididunt ut labore et dolore magna " +
                 "aliqua. Ut enim ad minim veniam, quis nostrud exercitation " +
@@ -84,34 +95,34 @@ public class TestSubString {
                 "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " +
                 "non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(1, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(53410510), substr.list);
+        int[] arr = substr.search(path, pattern);
+        int[] test = new int[] {53410510};
+        Assertions.assertArrayEquals(test, arr);
     }
 
     @Test
-    public void test7() {
+    public void testNullSubstring() {
         Substring substr = new Substring();
         String path, pattern;
 
         path = "./src/test/resources/test6";
         pattern = null;
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(0, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(), substr.list);
+        Exception e = Assertions.assertThrows(Exception.class, () -> substr.search(path, pattern));
+        String actual = e.getMessage();
+        Assertions.assertEquals("Path or substring is null", actual);
     }
 
     @Test
-    public void test8() {
+    public void testBadPath() {
         Substring substr = new Substring();
         String path, pattern;
 
         path = "some text";
         pattern = "find this string";
 
-        substr.search(path, pattern);
-        Assertions.assertEquals(0, substr.list.size());
-        Assertions.assertEquals(Arrays.asList(), substr.list);
+        Exception e = Assertions.assertThrows(Exception.class, () -> substr.search(path, pattern));
+        String actual = e.getMessage();
+        Assertions.assertEquals("Can not read file", actual);
     }
 }

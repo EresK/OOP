@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 public class Substring {
 
-    public ArrayList<Integer> list;
+    private ArrayList<Integer> list;
+    private int[] entrance;
 
     private int fullOffset;
     private int nextOffset;
@@ -21,15 +22,17 @@ public class Substring {
     /**
      * @param path - file path
      * @param substring - searching substring
-     * @return
-     * -1 - empty substring
-     * 0 - algorithm successfully end
+     * @return array with all entrance indexes
      */
-    public int search(String path, String substring) {
-        if (path == null || substring == null) return -1;
+    public int[] search(String path, String substring) throws Exception {
+        if (path == null || substring == null) throw new Exception("Path or substring is null");
+
+        if (substring.length() == 0) {
+            entrance = list.stream().mapToInt(Integer::intValue).toArray();
+            return entrance;
+        }
 
         char[] str = substring.toCharArray();
-        if (str.length == 0) return 0;
 
         char[] buffer = new char[str.length];
         int[] offset = new int[str.length];
@@ -52,7 +55,7 @@ public class Substring {
                         nextOffset = innerOffset;
                     }
                 }
-                else if (nextOffset == -1) return 0;
+                else if (nextOffset == -1) break;
                 else {
                     fullOffset += nextOffset;
                     if (nextOffset != str.length) {
@@ -63,11 +66,12 @@ public class Substring {
                 }
             }
         }
-        catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        catch (IOException e) {
+            throw new Exception("Can not read file");
         }
 
-        return 0;
+        entrance = list.stream().mapToInt(Integer::intValue).toArray();
+        return entrance;
     }
 
     /**
@@ -79,7 +83,7 @@ public class Substring {
      * @return
      * -1 - file end, if actual numbers of chars in buffer less than chars in str
      * 0 - success, it means buffer == str
-     * number from 1 to str length is offset
+     * number from 1 to str.length is offset
      */
     private int compare(char[] buffer, int symNum, char[] str, int[] offset) {
         if (symNum < str.length) return  -1;
