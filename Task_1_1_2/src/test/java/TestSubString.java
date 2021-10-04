@@ -101,4 +101,17 @@ public class TestSubString {
         Assertions.assertEquals(0, substr.list.size());
         Assertions.assertEquals(Arrays.asList(), substr.list);
     }
+
+    @Test
+    public void test8() {
+        Substring substr = new Substring();
+        String path, pattern;
+
+        path = "some text";
+        pattern = "find this string";
+
+        substr.search(path, pattern);
+        Assertions.assertEquals(0, substr.list.size());
+        Assertions.assertEquals(Arrays.asList(), substr.list);
+    }
 }
