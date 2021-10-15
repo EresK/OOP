@@ -13,21 +13,25 @@ public class Stack<T> {
         stack = tmp;
     }
 
-    private void resize(int newSize) throws Exception{
-        if (newSize <= stack.length) throw new Exception("Can not reduce memory");
-
+    private void resize(int newSize) {
         T[] tmp = (T[]) new Object[newSize];
         System.arraycopy(stack, 0, tmp, 0, count);
         stack = tmp;
     }
 
+    /**
+     * @param elem - element to add to top of current stack
+     */
     public void push(T elem) {
         if (count >= stack.length) resize();
         stack[count++] = elem;
     }
 
-    //Here is the problem that the Stack elements are extracted.
-    public void pushStack(Stack<T> elements) throws Exception {
+    /**
+     * @param elements - elements to add to current stack
+     * @bug - Here is the problem that the Stack elements are extracted.
+     */
+    public void pushStack(Stack<T> elements) {
         if (elements.count + count >= stack.length) resize(elements.count + count);
 
         int elemCount = elements.count + count;
@@ -38,11 +42,19 @@ public class Stack<T> {
         count = elemCount;
     }
 
+    /**
+     * @return - get element from the top of current stack
+     */
     public T pop() {
         if (count > 0) return stack[--count];
         return null;
     }
 
+    /**
+     * @param num - count of elements to get from the top of stack
+     * @return - new stack with the elements
+     * @throws Exception - it shows when num greater than total number of elements in the current stack
+     */
     public Stack<T> popStack(int num) throws Exception {
         if (num > count) throw new Exception("Can not get more number of elements than the current");
 
