@@ -29,7 +29,6 @@ public class Stack<T> {
 
     /**
      * @param elements - elements to add to current stack
-     * @bug - Here is the problem that the Stack elements are extracted.
      */
     public void pushStack(Stack<T> elements) {
         if (elements.count + count >= stack.length) resize(elements.count + count);
