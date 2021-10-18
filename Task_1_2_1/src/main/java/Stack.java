@@ -1,11 +1,13 @@
 public class Stack<T> {
-    public int count;
+    private int count;
     private T[] stack;
 
     Stack() {
         count = 0;
         stack = (T[]) new Object[1];
     }
+
+    public int getCount() {return count;}
 
     private void resize() {
         T[] tmp = (T[]) new Object[stack.length * 2];
@@ -31,9 +33,9 @@ public class Stack<T> {
      * @param elements - elements to add to current stack
      */
     public void pushStack(Stack<T> elements) throws Exception {
-        if (elements.count + count >= stack.length) resize(elements.count + count);
+        if (elements.getCount() + count >= stack.length) resize(elements.getCount() + count);
 
-        int elemCount = elements.count + count;
+        int elemCount = elements.getCount() + count;
 
         for (int i = elemCount - 1; i >= count; i--) {
             stack[i] = elements.pop();

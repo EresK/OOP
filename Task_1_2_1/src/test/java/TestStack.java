@@ -8,21 +8,21 @@ public class TestStack {
         Stack<Integer> sInt = new Stack<>();
 
         //push
-        Assertions.assertEquals(0, sInt.count);
+        Assertions.assertEquals(0, sInt.getCount());
         sInt.push(1);
         sInt.push(3);
         sInt.push(5);
-        Assertions.assertEquals(3, sInt.count);
+        Assertions.assertEquals(3, sInt.getCount());
 
         //pop
         Assertions.assertEquals(5, sInt.pop());
-        Assertions.assertEquals(2, sInt.count);
+        Assertions.assertEquals(2, sInt.getCount());
 
         Assertions.assertEquals(3, sInt.pop());
-        Assertions.assertEquals(1, sInt.count);
+        Assertions.assertEquals(1, sInt.getCount());
 
         Assertions.assertEquals(1, sInt.pop());
-        Assertions.assertEquals(0, sInt.count);
+        Assertions.assertEquals(0, sInt.getCount());
 
         //Expecting null for empty stack
         Exception e = Assertions.assertThrows(Exception.class, () -> sInt.pop());
@@ -39,19 +39,19 @@ public class TestStack {
         strTwo.push("2: This is");
         strTwo.push("3: some string");
         strTwo.push("4: .");
-        Assertions.assertEquals(3, strTwo.count);
+        Assertions.assertEquals(3, strTwo.getCount());
 
         //pushStack
         strOne.pushStack(strTwo);
-        Assertions.assertEquals(4, strOne.count);
+        Assertions.assertEquals(4, strOne.getCount());
         Assertions.assertEquals("4: .", strOne.pop());
         Assertions.assertEquals("3: some string", strOne.pop());
-        Assertions.assertEquals(2, strOne.count);
+        Assertions.assertEquals(2, strOne.getCount());
 
         //popStack
         strTwo = strOne.popStack(2);
-        Assertions.assertEquals(0, strOne.count);
-        Assertions.assertEquals(2, strTwo.count);
+        Assertions.assertEquals(0, strOne.getCount());
+        Assertions.assertEquals(2, strTwo.getCount());
 
         //Exception check
         Exception e = Assertions.assertThrows(Exception.class, () -> strOne.popStack(5));
