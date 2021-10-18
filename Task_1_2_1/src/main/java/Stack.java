@@ -30,7 +30,7 @@ public class Stack<T> {
     /**
      * @param elements - elements to add to current stack
      */
-    public void pushStack(Stack<T> elements) {
+    public void pushStack(Stack<T> elements) throws Exception {
         if (elements.count + count >= stack.length) resize(elements.count + count);
 
         int elemCount = elements.count + count;
@@ -44,9 +44,9 @@ public class Stack<T> {
     /**
      * @return - get element from the top of current stack
      */
-    public T pop() {
+    public T pop() throws Exception {
         if (count > 0) return stack[--count];
-        return null;
+        throw new Exception("Can not get element from empty stack");
     }
 
     /**

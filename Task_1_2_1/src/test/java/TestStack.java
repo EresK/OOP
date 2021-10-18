@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 public class TestStack {
 
     @Test
-    public void pushPop() {
+    public void pushPop() throws Exception {
         Stack<Integer> sInt = new Stack<>();
 
         //push
@@ -25,7 +25,9 @@ public class TestStack {
         Assertions.assertEquals(0, sInt.count);
 
         //Expecting null for empty stack
-        Assertions.assertNull(sInt.pop());
+        Exception e = Assertions.assertThrows(Exception.class, () -> sInt.pop());
+        String expected = "Can not get element from empty stack";
+        Assertions.assertEquals(expected, e.getMessage());
     }
 
     @Test
