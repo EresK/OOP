@@ -1,63 +1,71 @@
+import java.util.ArrayList;
+
 public class Semester {
-    private String[] name;
-    private int[] mark;
-    private boolean[] passed;
-    private boolean[] last;
-    private int countTotal;
-    private int count;
+    // Work by default contains in 0 index
+    // If there is only passed or not for subject
+    // then mark == 0 if passed
+    // and  mark == 2 of not passed
+    private ArrayList<String> name;
+    private ArrayList<Integer> mark;
+    private ArrayList<Boolean> last;
 
-    private String work_name;
-    private int work_mark;
-    private boolean work_passed;
+    private int MAX_SUBJECTS = 20;
+    private int countSubject;
 
-    Semester(int countOfSubject) {
-        name = new String[countOfSubject];
-        mark = new int[countOfSubject];
-        passed = new boolean[countOfSubject];
-        last = new boolean[countOfSubject];
-        countTotal = countOfSubject;
-        count = 0;
+    Semester() {
+        name = new ArrayList<>();
+        mark = new ArrayList<>();
+        last = new ArrayList<>();
+        countSubject = 0;
     }
 
-    public int getCountTotal() {return countTotal;}
-    public int getCount() {return count;}
-    public int getWorkMark() {return work_mark;}
-    public boolean getWorkPassed() {return work_passed;}
+    public int getMAX_SUBJECTS() {return MAX_SUBJECTS;}
+    public int getCount() {return countSubject;}
 
-    public void addSubject(String name, int mark, boolean passed, boolean last) throws Exception {
-        if (count >= countTotal) throw new Exception("Can not add subject");
-        this.name[count] = name;
-        this.mark[count] = mark;
-        this.passed[count] = passed;
-        this.last[count] = last;
-        count++;
-    }
+    // if subject contains it will be rewrite
+    public void addSubject(String name, int mark, boolean last) throws Exception {
+        if (name == null || name.equals("") || mark < 0 || mark > 5)
+            throw new Exception("Incorrect name or mark");
 
-    public void addWork(String work_name, int work_mark, boolean work_passed) {
-        this.work_name = work_name;
-        this.work_mark = work_mark;
-        this.work_passed = work_passed;
-    }
-
-    public float averageScore() throws Exception {
-        int sum = 0;
-        int cnt = 0;
-
-        for (int i = 0; i < count; i++) {
-            if (mark[i] < 1) continue;
-            sum += mark[i];
-            cnt++;
+        int index;
+        if ((index = this.name.indexOf(name)) > 0) {
+            this.mark.set(index, mark);
+            this.last.set(index, last);
         }
-        if (cnt <= 0) throw new Exception("No graded subjects");
+        else {
+            if (countSubject + 1 >= MAX_SUBJECTS)
+                throw new Exception("Too many subjects");
 
+            this.name.add(name);
+            this.mark.add(mark);
+            this.last.add(last);
+            ++countSubject;
+        }
+    }
+
+    public float getAverageResult() {
+        float sum = 0;
+        int cnt = 0;
+        int tmp;
+
+        for (int i = 0; i < countSubject; i++) {
+            if ((tmp = mark.get(i)) != 0) {
+                sum += tmp;
+                ++cnt;
+            }
+        }
+
+        if (cnt <= 0) return 0;
         return sum / cnt;
     }
 
-    public boolean scholarship() {
+    public boolean isScholarship() {
         boolean ship = true;
+        int tmp;
 
-        for (int i = 0; i < count; i++) {
-            if (!passed[i] || (mark[i] < 4 && mark[i] > 0)) {
+        for (int i = 0; i < countSubject; i++) {
+            tmp = mark.get(i);
+            if (tmp < 4 && tmp != 0) {
                 ship = false;
                 break;
             }
@@ -66,24 +74,32 @@ public class Semester {
         return ship;
     }
 
-    public float highScore() throws Exception {
-        boolean high = true;
+    public float getHonorsResult() throws Exception {
+        if (countSubject <= 0)
+            throw new Exception("No any subject");
 
-        int cntAce = 0;
-        int cntAll = 0;
+        boolean hons = true;
+        int sum = 0;
+        int cnt = 0;
+        int tmp;
 
-        for (int i = 0; i < count; i++) {
-            if (!last[i]) continue;
-            if (!passed[i] || (mark[i] < 4 && mark[i] > 0))
-            {
-                high = false;
-                break;
+        if (mark.get(0) < 5 && mark.get(0) != 0)
+            hons = false;
+        else {
+            for (int i = 1; i < countSubject; i++) {
+                if ((tmp = mark.get(i)) < 4 && tmp != 0) {
+                    hons = false;
+                    break;
+                }
+                else if (last.get(i) && tmp != 0) {
+                    sum += tmp;
+                    ++cnt;
+                }
             }
-            if (mark[i] == 5) cntAce++;
-            if (mark[i] > 0) cntAll++;
         }
-        if (cntAll <= 0) throw new Exception("No graded subjects");
 
-        return cntAce / cntAll;
+        if (!hons) return -1;
+        if (cnt <= 0) return 0;
+        return (float) (sum / cnt);
     }
 }
