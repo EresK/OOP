@@ -40,21 +40,21 @@ public class TestSemester {
     public void AverageResult() throws Exception {
         Semester sem = new Semester(20);
 
-        Assertions.assertEquals(0, sem.getCount());
+        Assertions.assertEquals(0, sem.getSubjectCount());
         Assertions.assertEquals(0, sem.getAverageResult());
 
         sem.addSubject("Algebra", 4, false);
         sem.addSubject("English", 4, false);
         sem.addSubject("Programing", 4, true);
 
-        Assertions.assertEquals(3, sem.getCount());
+        Assertions.assertEquals(3, sem.getSubjectCount());
         Assertions.assertEquals(4, sem.getAverageResult());
 
         sem.addSubject("Algebra", 5, false);
         sem.addSubject("English", 5, false);
         sem.addSubject("Programing", 5, true);
 
-        Assertions.assertEquals(3, sem.getCount());
+        Assertions.assertEquals(3, sem.getSubjectCount());
         Assertions.assertEquals(5, sem.getAverageResult());
 
         sem.addSubject("Haskell", 4, false);
@@ -62,8 +62,8 @@ public class TestSemester {
         sem.addSubject("Platforms", 4, true);
         sem.addSubject("History", 4, true);
 
-        Assertions.assertEquals(7, sem.getCount());
-        Assertions.assertEquals(4.5, sem.getAverageResult());
+        Assertions.assertEquals(7, sem.getSubjectCount());
+        Assertions.assertEquals(4.4,Math.round(sem.getAverageResult() * 10.0) / 10.0);
     }
 
     @Test

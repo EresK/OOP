@@ -1,25 +1,18 @@
 import java.util.ArrayList;
 
 public class Semester {
-    // Work by default contains in 0 index
-    // If there is only passed or not for subject
-    // then mark == 0 if passed
-    // and  mark == 2 of not passed
-    private ArrayList<String> name;
-    private ArrayList<Integer> mark;
-    private ArrayList<Boolean> last;
+
+    private ArrayList<Subject> subjects;
 
     private int MAX_SUBJECTS = 20;
-    private int countSubject;
+    private int subjectCount;
 
     Semester(int maxSubjects) throws Exception {
         if (maxSubjects <= 0)
             throw new Exception("Subjects number can not be negative");
 
-        name = new ArrayList<>();
-        mark = new ArrayList<>();
-        last = new ArrayList<>();
-        countSubject = 0;
+        subjects = new ArrayList<>();
+        subjectCount = 0;
     }
 
     /**
@@ -30,16 +23,15 @@ public class Semester {
     /**
      * @return - get count of subjects
      */
-    public int getCount() {return countSubject;}
+    public int getSubjectCount() {return subjectCount;}
 
     /**
      * @return - count of subjects with last flags
      */
     public int getLastCount() {
         int cnt = 0;
-        for (int i = 1; i < countSubject; i++) {
-            if (last.get(i)) ++cnt;
-        }
+        for (int i = 1; i < subjectCount; i++)
+            if (subjects.get(i).isLast()) cnt++;
         return cnt;
     }
 
@@ -55,19 +47,20 @@ public class Semester {
         if (name == null || name.equals("") || mark < 0 || mark > 5)
             throw new Exception("Incorrect name or mark");
 
-        int index;
-        if ((index = this.name.indexOf(name)) >= 0) {
-            this.mark.set(index, mark);
-            this.last.set(index, last);
+        int index = -1;
+        for(Subject s : subjects) {
+            if (s.getName().equals(name))
+                index = subjects.indexOf(s);
+        }
+        if (index >= 0) {
+            subjects.get(index).setMark(mark);
+            subjects.get(index).setLast(last);
         }
         else {
-            if (countSubject >= MAX_SUBJECTS)
+            if (subjectCount >= MAX_SUBJECTS)
                 throw new Exception("Too many subjects");
-
-            this.name.add(name);
-            this.mark.add(mark);
-            this.last.add(last);
-            ++countSubject;
+            subjects.add(new Subject(name, mark, last));
+            subjectCount++;
         }
     }
 
@@ -79,10 +72,10 @@ public class Semester {
         int cnt = 0;
         int tmp;
 
-        for (int i = 0; i < countSubject; i++) {
-            if ((tmp = mark.get(i)) != 0) {
+        for (int i = 1; i < subjectCount; i++) {
+            if ((tmp = subjects.get(i).getMark()) != 0) {
                 sum += tmp;
-                ++cnt;
+                cnt++;
             }
         }
 
@@ -98,8 +91,8 @@ public class Semester {
         boolean ship = true;
         int tmp;
 
-        for (int i = 0; i < countSubject; i++) {
-            tmp = mark.get(i);
+        for (int i = 0; i < subjectCount; i++) {
+            tmp = subjects.get(i).getMark();
             if (tmp < 4 && tmp != 0) {
                 ship = false;
                 break;
@@ -114,19 +107,19 @@ public class Semester {
      * @throws Exception - throws if there are no subjects
      */
     public int getAceNumber() throws Exception {
-        if (countSubject <= 0)
+        if (subjectCount <= 0)
             throw new Exception("No any subject");
 
         int ace = 0;
-        int tmp;
-
-        if (mark.get(0) == 5 || mark.get(0) == 0) {
-            for (int i = 1; i < countSubject; i++) {
-                if ((tmp = mark.get(i)) < 4 && tmp != 0) {
+        int tmp = subjects.get(0).getMark();
+        if (tmp == 5 || tmp == 0) {
+            for (int i = 1; i < subjectCount; i++) {
+                if ((tmp = subjects.get(i).getMark()) < 4 && tmp != 0) {
                     ace = -1;
                     break;
                 }
-                else if (last.get(i) && tmp == 5) ace += 1;
+                else if (subjects.get(i).isLast() && tmp == 5)
+                    ace++;
             }
         }
 

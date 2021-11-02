@@ -53,7 +53,7 @@ public class TestStudentBook {
         book.addSubject(1, "Algebra", 4, false);
         book.addSubject(1, "Set Theory", 4, false);
         book.addSubject(1, "Programming", 4, false);
-        Assertions.assertEquals(3, book.getSemester(1).getCount());
+        Assertions.assertEquals(3, book.getSemester(1).getSubjectCount());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class TestStudentBook {
         book.addSubject(2, "English", 4, false);
         book.addSubject(2, "Digital Platforms", 5, true);
 
-        Assertions.assertEquals(4.5, Math.round(book.getAverageResult() *  10.0) / 10.0 );
+        Assertions.assertEquals(4.4, Math.round(book.getAverageResult() *  10.0) / 10.0 );
     }
 
     @Test
