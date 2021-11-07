@@ -2,6 +2,9 @@
 /.idea
 /bin
 /build
+.settings
+.classpath
+.project
 build.gradle
 gradlew
 gradlew.bat
