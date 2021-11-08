@@ -55,9 +55,10 @@ public class TestCalculator {
 
         Assertions.assertEquals(5, calculator.Calculate("- * / 15 - 7 + 1 1 3 + 2 + 1 1"));
         Assertions.assertEquals(0, calculator.Calculate("* log 1 2"));
-
         Assertions.assertEquals(16, calculator.Calculate("pow 2 sqrt 16"));
+
         Assertions.assertEquals(Math.cos(2), calculator.Calculate("cos 2"));
         Assertions.assertEquals(Math.sin(5), calculator.Calculate("sin 5"));
+        Assertions.assertEquals(10, calculator.Calculate("- 5 - 5"));
     }
 }

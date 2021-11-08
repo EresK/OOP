@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Stack;
 
 enum Operator {
     plus,
@@ -13,13 +13,10 @@ enum Operator {
 }
 
 public class Calculator {
-
-    private Stack<Double> number;
-    private Stack<Object> token;
+    private final Stack<Double> number;
 
     Calculator() {
         number = new Stack<>();
-        token = new Stack<>();
     }
 
     /**
@@ -28,7 +25,6 @@ public class Calculator {
      * @throws Exception
      * Empty expression,
      * Met unknown symbol,
-     * Not in prefix form,
      * Division by zero
      */
     public double Calculate(String expression) throws Exception {
@@ -36,74 +32,81 @@ public class Calculator {
             throw new Exception("Empty expression");
 
         number.clear();
-        token.clear();
 
-        Tokenize(expression);
+        String[] words = expression.split(" ");
 
+        double num;
         double a, b;
-        Operator op;
-        Object tmp;
 
-        while (token.size() > 0) {
-            tmp = token.pop();
-            if (tmp instanceof Double) {
-                number.push((double) tmp);
+        for (int i = words.length - 1; i >= 0; i--) {
+            switch (words[i]){
+                case "+":
+                    a = PeekPopNumber();
+                    b = PeekPopNumber();
+                    number.push(a + b);
+                    break;
+
+                case "-":
+                    a = PeekPopNumber();
+                    if (number.isEmpty())
+                        number.push(-a);
+                    else {
+                        b = number.pop();
+                        number.push(a - b);
+                    }
+                    break;
+
+                case "*":
+                    a = PeekPopNumber();
+                    b = PeekPopNumber();
+                    number.push(a * b);
+                    break;
+
+                case "/":
+                    a = PeekPopNumber();
+                    b = PeekPopNumber();
+                    if(!isZero(b))
+                        number.push(a / b);
+                    else
+                        throw new Exception("Can not be divided by zero");
+                    break;
+
+                case "pow":
+                    a = PeekPopNumber();
+                    b = PeekPopNumber();
+                    number.push(Math.pow(a, b));
+                    break;
+
+                case "log":
+                    a = PeekPopNumber();
+                    number.push(Math.log(a));
+                    break;
+
+                case "sqrt":
+                    a = PeekPopNumber();
+                    number.push(Math.sqrt(a));
+                    break;
+
+                case "sin":
+                    a = PeekPopNumber();
+                    number.push(Math.sin(a));
+                    break;
+
+                case "cos":
+                    a = PeekPopNumber();
+                    number.push(Math.cos(a));
+                    break;
+
+                default:
+                    try {
+                        num = Double.parseDouble(words[i]);
+                    }
+                    catch (Exception e) {
+                        throw new Exception("Met unknown symbol");
+                    }
+                    number.push(num);
+                    break;
             }
-            else if (tmp instanceof Operator) {
-                op = (Operator) tmp;
-                a = PeekPopNumber();
-                switch (op) {
-                    case plus:
-                        b = PeekPopNumber();
-                        number.push(a + b);
-                        break;
-
-                    case minus:
-                        if(!number.isEmpty()) {
-                            b = PeekPopNumber();
-                            number.push(a - b);
-                        }
-                        else
-                            number.push(-a);
-                        break;
-
-                    case multiply:
-                        b = PeekPopNumber();
-                        number.push(a * b);
-                        break;
-
-                    case division:
-                        b = PeekPopNumber();
-                        if (!isNull(b))
-                            number.push(a / b);
-                        else
-                            throw new Exception("Can not be divided by zero");
-                        break;
-
-                    case pow:
-                        b = PeekPopNumber();
-                        number.push(Math.pow(a, b));
-                        break;
-
-                    case log:
-                        number.push(Math.log(a));
-                        break;
-
-                    case sqrt:
-                        number.push(Math.sqrt(a));
-                        break;
-
-                    case sin:
-                        number.push(Math.sin(a));
-                        break;
-
-                    case cos:
-                        number.push(Math.cos(a));
-                        break;
-                }
-            }
-            else
-                throw new Exception("Unknown token");
         }
 
         if (number.size() != 1)
@@ -126,72 +129,7 @@ public class Calculator {
      * @param a value
      * @return if value accurate to 15 decimals after zero
      */
-    private boolean isNull(double a) {
+    private boolean isZero(double a) {
         return (a < 10e-16) && (a > -10e-16);
-    }
-
-    /**
-     * @param expression - expression in prefix form
-     * @throws Exception
-     * Empty expression,
-     * Met unknown token
-     */
-    private void Tokenize(String expression) throws Exception {
-        if (expression == null || expression.equals(""))
-            throw new Exception("Empty expression");
-
-        String[] words = expression.split(" ");
-
-        double num;
-
-        for (String word: words) {
-            switch (word) {
-                case "+":
-                    token.push(Operator.plus);
-                    break;
-
-                case "-":
-                    token.push(Operator.minus);
-                    break;
-
-                case "*":
-                    token.push(Operator.multiply);
-                    break;
-
-                case "/":
-                    token.push(Operator.division);
-                    break;
-
-                case "log":
-                    token.push(Operator.log);
-                    break;
-
-                case "pow":
-                    token.push(Operator.pow);
-                    break;
-
-                case "sqrt":
-                    token.push(Operator.sqrt);
-                    break;
-
-                case "sin":
-                    token.push(Operator.sin);
-                    break;
-
-                case "cos":
-                    token.push(Operator.cos);
-                    break;
-
-                default:
-                    try {
-                        num = Double.parseDouble(word);
-                    }
-                    catch (Exception e) {
-                        throw new Exception("Met unknown symbol");
-                    }
-                    token.push(num);
-                    break;
-            }
-        }
     }
 }
