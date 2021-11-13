@@ -1,6 +1,9 @@
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class Note implements Comparable<Note> {
+public class Note implements Comparable<Note>, Serializable {
     private String title;
     private String body;
     private Date time;
@@ -15,12 +18,16 @@ public class Note implements Comparable<Note> {
         return title;
     }
 
+    public String getBody() {
+        return body;
+    }
+
     public Date getTime() {
         return time;
     }
 
     @Override
-    public int compareTo(Note note) {
+    public int compareTo(@NotNull Note note) {
         if (time.before(note.getTime()))
             return 1;
         return 0;
