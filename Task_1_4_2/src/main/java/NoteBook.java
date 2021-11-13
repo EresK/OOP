@@ -91,10 +91,10 @@ public class NoteBook {
             keywords.remove(0);
 
             for (Note n: notes) {
-                if (begin.before(n.getTime()) && end.after(n.getTime())) {
-                    if (keywords.contains(n.getTitle().toLowerCase()))
-                        System.out.printf("%s\n%s\n", n.getTitle(), n.getBody());
-                }
+                if (begin.before(n.getTime()) &&
+                        end.after(n.getTime()) &&
+                        keywords.contains(n.getTitle().toLowerCase()))
+                    System.out.printf("%s\n%s\n", n.getTitle(), n.getBody());
             }
         }
         else
