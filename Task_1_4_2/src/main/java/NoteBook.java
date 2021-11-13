@@ -20,6 +20,10 @@ public class NoteBook {
         notes = new ArrayList<>();
     }
 
+    /**
+     * @param path - path to json file to read from
+     * @throws Exception - Can not read from file: notes list will empty
+     */
     NoteBook(String path) throws Exception {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(path)) {
@@ -29,6 +33,10 @@ public class NoteBook {
             notes = new ArrayList<>();
     }
 
+    /**
+     * @param args - arguments represented like TitleOfNote and TheNote
+     * @throws Exception - Null args, missed title or the note body
+     */
     public void addNote(String[] args) throws Exception {
         if (args == null)
             throw new NullPointerException();
@@ -42,6 +50,9 @@ public class NoteBook {
             throw new Exception("Missed argument");
     }
 
+    /**
+     * @param args - arguments represented like Titles to delete
+     */
     public void removeNote(String[] args) {
         if (args == null)
             throw new NullPointerException();
@@ -51,14 +62,20 @@ public class NoteBook {
         notes.removeIf(n -> tmp.contains(n.getTitle()));
     }
 
+    /**
+     * @param args
+     * empty args to show all notes or string represented Begin, End, VariableTitles...,
+     * Begin, End are dd.MM.yyyy HH:mm
+     * @throws Exception - Bad date representation or missed one of: Begin, End, VariableTitles.
+     */
     public void showNote(String[] args) throws Exception {
         if (args == null || args.length == 0) {
             for (Note n: notes) {
-                System.out.println(n.getTitle() + "\n" + n.getBody() + "\n");
+                System.out.printf("%s\n%s\n", n.getTitle(), n.getBody());
             }
         }
         else if (args.length >= 2) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
             Date begin, end;
             try {
@@ -74,9 +91,9 @@ public class NoteBook {
             keywords.remove(0);
 
             for (Note n: notes) {
-                if (begin.before(n.getTime()) && end.after(n.getTime()) &&
-                        keywords.contains(n.getTitle().toLowerCase())) {
-                    System.out.println(n.getTitle() + "\n" + n.getBody() + "\n");
+                if (begin.before(n.getTime()) && end.after(n.getTime())) {
+                    if (keywords.contains(n.getTitle().toLowerCase()))
+                        System.out.printf("%s\n%s\n", n.getTitle(), n.getBody());
                 }
             }
         }
@@ -84,6 +101,10 @@ public class NoteBook {
             throw new Exception("Missing argument");
     }
 
+    /**
+     * @param path - path to json file
+     * @throws Exception - Can not write to the file
+     */
     public void writeJson(String path) throws Exception {
         if (path == null)
             throw new NullPointerException();

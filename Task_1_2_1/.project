@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Calculator</name>
-	<comment>Project Task_1_4_1 created by Buildship.</comment>
+	<name>Task_1_2_1</name>
+	<comment>Project Task_1_2_1 created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>0</id>
+			<id>1636817127433</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
