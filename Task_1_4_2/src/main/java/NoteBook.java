@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NoteBook {
-    ArrayList<Note> notes;
+    private ArrayList<Note> notes;
 
     NoteBook() {
         notes = new ArrayList<>();
