@@ -1,17 +1,5 @@
 import java.util.Stack;
 
-enum Operator {
-    plus,
-    minus,
-    multiply,
-    division,
-    log,
-    pow,
-    sqrt,
-    sin,
-    cos
-}
-
 public class Calculator {
     private final Stack<Double> number;
 
