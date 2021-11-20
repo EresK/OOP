@@ -1,61 +1,36 @@
-import org.apache.commons.cli.*;
-
 public class Main {
-    public static void main(String[] args) throws Exception {
-        Option jpath = new Option("p", "path", true, "path to .json file");
-        jpath.setRequired(true);
-        jpath.setArgs(1);
-
-        Option add = new Option("a", "add", true,"add new note");
-        add.setArgs(2);
-
-        Option rm = new Option("r", "rm", true,"remove existing note");
-        rm.setArgs(1);
-
-        Option show = new Option("s", "show", true,"shows appropriate notes");
-        show.setOptionalArg(true);
-        show.setArgs(Option.UNLIMITED_VALUES);
-
-        Options options = new Options();
-        options.addOption(add);
-        options.addOption(rm);
-        options.addOption(show);
-        options.addOption(jpath);
+    public static void main(String[] args) {
+        Parser parser = new Parser();
+        SimpleCMD cmd = new SimpleCMD();
+        String[] words;
 
         try {
-            CommandLineParser parser = new DefaultParser();
-            CommandLine cmd = parser.parse(options, args);
+            words = parser.parse(args);
+            cmd.toOptions(words);
+            NoteBook noteBook = new NoteBook(cmd.path);
 
-            if (!cmd.hasOption(jpath))
-                throw new Exception("Needs to path to json file");
+            int as = 0;
+            int rs = 0;
+            int ss = 0;
 
-            String path = cmd.getOptionValue("path");
-            NoteBook noteBook = new NoteBook(path);
-
-            String[] value;
-            for (Option opt: cmd.getOptions()) {
-                switch (opt.getOpt()) {
-                    case "add":
-                        value = cmd.getOptionValues("add");
-                        noteBook.addNote(value);
+            for(char c: cmd.queue) {
+                switch (c) {
+                    case 'a':
+                        noteBook.addNote(cmd.addArgs.get(as++));
                         break;
-
-                    case "rm":
-                        value = cmd.getOptionValues("rm");
-                        noteBook.removeNote(value);
+                    case 'r':
+                        noteBook.removeNote(cmd.removeArgs.get(rs++));
                         break;
-
-                    case "show":
-                        value = cmd.getOptionValues("show");
-                        noteBook.showNote(value);
+                    case 's':
+                        noteBook.showNote(cmd.showArgs.get(ss++));
                         break;
                 }
             }
 
-            noteBook.writeJson(path);
+            noteBook.writeJson(cmd.path);
         }
-        catch (ParseException e) {
-            System.err.println("Parsing failed: " + e.getMessage());
+        catch (Exception e) {
+            System.err.println("Can not process arguments: " + e.getMessage());
         }
     }
 }
