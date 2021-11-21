@@ -22,6 +22,10 @@ public class SimpleCMD {
         queue.clear();
     }
 
+    /**
+     * @param words - arguments from parser
+     * @throws Exception - missing option argument
+     */
     public void toOptions(String[] words) throws Exception {
         clearLists();
 

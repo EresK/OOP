@@ -15,9 +15,11 @@ public class TestNoteBook {
         Parser parser = new Parser();
 
         String[] words = {"-p", "\"filename\"", "-add", "title", "body"};
-        Assertions.assertArrayEquals(words, parser.parse("-p \"filename\" -add title body"));
+        String str = "-p \"filename\" -add title body";
+        Assertions.assertArrayEquals(words, parser.parse(str.split(" ")));
 
-        Exception e = Assertions.assertThrows(Exception.class, () -> parser.parse("\"file"));
+        String str2 = "\"file";
+        Exception e = Assertions.assertThrows(Exception.class, () -> parser.parse(str2.split(" ")));
         Assertions.assertEquals("Expected end of quotation", e.getMessage());
     }
 
@@ -26,7 +28,8 @@ public class TestNoteBook {
         Parser parser = new Parser();
         SimpleCMD cmd = new SimpleCMD();
 
-        String[] words = parser.parse("-p filename -a title \"inner data\" -a \"new title\" data -s -r title");
+        String str = "-p filename -a title \"inner data\" -a \"new title\" data -s -r title";
+        String[] words = parser.parse(str.split(" "));
         cmd.toOptions(words);
 
         String[] args = {"title", "\"inner data\""};
@@ -43,7 +46,8 @@ public class TestNoteBook {
 
         Assertions.assertEquals(0, cmd.showArgs.get(0).size());
 
-        words = parser.parse("-p filename -s \"20.11.2014 1:00\" \"20.11.2021 21:00\" title");
+        str = "-p filename -s \"20.11.2014 1:00\" \"20.11.2021 21:00\" title";
+        words = parser.parse(str.split(" "));
         cmd.toOptions(words);
 
         args = new String[] {"\"20.11.2014 1:00\"", "\"20.11.2021 21:00\"", "title"};

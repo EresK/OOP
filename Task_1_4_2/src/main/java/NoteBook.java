@@ -14,6 +14,9 @@ import java.util.List;
 public class NoteBook {
     private ArrayList<Note> notes;
 
+    /**
+     * @param path - path to json file to read from, may be null
+     */
     NoteBook(String path) {
         if (path == null)
             notes = new ArrayList<>();
@@ -28,6 +31,10 @@ public class NoteBook {
         }
     }
 
+    /**
+     * @param args - List with two Strings: title and a note
+     * @throws Exception - Missing argument or too many arguments
+     */
     public void addNote(ArrayList<String> args) throws Exception {
         if (args.size() == 2) {
             notes.add(new Note(args.get(0), args.get(1), new Date()));
@@ -36,6 +43,9 @@ public class NoteBook {
             throw new Exception("Missing argument");
     }
 
+    /**
+     * @param arg - A title of a note to remove
+     */
     public void removeNote(String arg) {
         if (arg == null)
             throw new NullPointerException();
@@ -43,6 +53,10 @@ public class NoteBook {
         notes.removeIf(n -> n.getTitle().equals(arg));
     }
 
+    /**
+     * @param args - null or empty list to show all notes, and list: begin, end date, variable titles to remove
+     * @throws Exception - Incorrect date representation, not(dd.MM.yyyy HH:mm), or missing begin or end of date
+     */
     public void showNote(ArrayList<String> args) throws Exception {
         if (args == null || args.size() == 0) {
             for (Note n: notes)
@@ -71,6 +85,10 @@ public class NoteBook {
             throw new Exception("Missing argument");
     }
 
+    /**
+     * @param path - path to a json file to write notes
+     * @throws Exception - Problems with writing to file
+     */
     public void writeJson(String path) throws Exception {
         if (path == null)
             throw new NullPointerException();
