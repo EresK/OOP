@@ -17,17 +17,16 @@ public class NoteBook {
     /**
      * @param path - path to json file to read from, may be null
      */
-    NoteBook(String path) {
+    NoteBook(String path) throws Exception {
         if (path == null)
             notes = new ArrayList<>();
         else {
-            Gson gson = new Gson();
             try (FileReader reader = new FileReader(path)) {
+                Gson gson = new Gson();
                 notes = gson.fromJson(reader, new TypeToken<List<Note>>() {}.getType());
             }
-            catch (Exception ignored) {
+            if (notes == null)
                 notes = new ArrayList<>();
-            }
         }
     }
 

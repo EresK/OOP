@@ -37,10 +37,9 @@ public class SimpleCMD {
                 case "--add":
                     if (i + 2 < words.length) {
                         ArrayList<String> list = new ArrayList<>();
-                        list.add(words[i + 1]);
-                        list.add(words[i + 2]);
+                        list.add(words[++i]);
+                        list.add(words[++i]);
                         addArgs.add(list);
-                        i += 2;
                         queue.add('a');
                     }
                     else
