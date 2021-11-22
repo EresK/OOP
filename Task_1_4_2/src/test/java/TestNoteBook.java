@@ -128,8 +128,27 @@ public class TestNoteBook {
         Assertions.assertEquals("Missing argument", e.getMessage());
     }
 
+    @Test
+    public void TestWriteJson() throws Exception {
+        SimpleCMD cmd = new SimpleCMD();
+        NoteBook noteBook = new NoteBook(null);
+
+        cmd.toOptions(new String[] {"-p", "filename", "-a", "title name", "inner data", "--add", "name", "note"});
+
+        noteBook.addNote(cmd.addArgs.get(0));
+        noteBook.addNote(cmd.addArgs.get(1));
+
+        noteBook.writeJson("new.json");
+
+        NoteBook noteBook1 = new NoteBook("new.json");
+
+        noteBook1.showNote(null);
+        Assertions.assertEquals("title name\ninner data\nname\nnote\n", output.toString());
+    }
+
     @AfterEach
     public void cleanUpStreams() {
+        output.reset();
         System.setOut(null);
     }
 }
