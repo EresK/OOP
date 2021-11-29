@@ -8,8 +8,10 @@ import java.io.FileWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NoteBook {
     private ArrayList<Note> notes;
@@ -73,11 +75,17 @@ public class NoteBook {
                 throw new Exception("Bad date format");
             }
 
+            List<String> lowArgs = args.stream().map(String::toLowerCase).collect(Collectors.toList());
+
             for (Note n: notes) {
-                if (begin.before(n.getTime()) &&
-                        end.after(n.getTime()) &&
-                        args.contains(n.getTitle()))
-                    System.out.printf("%s\n%s\n", n.getTitle(), n.getBody());
+                if (begin.before(n.getTime()) && end.after(n.getTime())) {
+                    for (String s : n.getTitle().split(" ")) {
+                        if (lowArgs.contains(s.toLowerCase())) {
+                            System.out.printf("%s\n%s\n", n.getTitle(), n.getBody());
+                            break;
+                        }
+                    }
+                }
             }
         }
         else
