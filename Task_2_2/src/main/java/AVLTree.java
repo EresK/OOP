@@ -159,26 +159,4 @@ public class AVLTree<T extends Comparable<T>> {
 
         return node;
     }
-
-    /*
-    public void printTree() {
-        print(root, "", true);
-    }
-
-    private void print(Node<T> currPtr, String indent, boolean last) {
-        if (currPtr != null) {
-            System.out.print(indent);
-            if (last) {
-                System.out.print("R----");
-                indent += "   ";
-            } else {
-                System.out.print("L----");
-                indent += "|  ";
-            }
-            System.out.println(currPtr.value);
-            print(currPtr.left, indent, false);
-            print(currPtr.right, indent, true);
-        }
-    }
-    */
 }
