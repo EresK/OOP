@@ -2,12 +2,10 @@ public class Node<T> {
     public T value;
     public Node<T> left;
     public Node<T> right;
-    public int height;
 
-    Node(T value) {
+    public Node(T value) {
         this.value = value;
         left = null;
         right = null;
-        height = 1;
     }
 }
