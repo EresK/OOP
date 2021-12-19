@@ -1,60 +1,107 @@
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Tree<T> {
     private Node<T> root;
-    private int size;
-    private int curr;
+    private int count; // Number of all possible nodes
+    private int curr; // Number of existing(not-null) nodes
 
     Tree(T value, int branches) {
         root = new Node<>(value, branches);
-        size = 1 + branches;
+        count = 1 + branches;
         curr = 1;
     }
 
-    public int getSize() {
-        return size;
+    /**
+     * @return - number of all possible nodes in the tree
+     */
+    public int getCount() {
+        return count;
     }
 
+    /**
+     * @return - number of existing(not-null) nodes in the tree
+     */
     public int getCurr() {
         return curr;
     }
 
+    /**
+     * @return - true if the tree has free(null) branch, false otherwise
+     */
     public boolean hasSpace() {
-        return curr < size;
+        return curr < count;
     }
 
+    /**
+     * @param value - value of T
+     * @param branches - number of branches of a node
+     * @return - true if node was added, false otherwise
+     */
     public boolean add(T value, int branches) {
         if (branches < 0)
             return false;
 
-        Node<T> node = root;
         boolean isAdded = false;
-        Queue<Node<T>> queue = new LinkedList<>();
 
-        while (node != null) {
-            if (node.hasSpace() && node.add(value, branches)) {
-                size += branches;
-                curr += 1;
-                isAdded = true;
+        if (root == null) {
+            root = new Node<>(value, branches);
+            count = 1 + branches;
+            curr = 1;
 
-                break;
-            }
-            else {
-                for (int i = 0; i < node.nodes.length; i++) {
-                    if (node.nodes[i] != null)
-                        queue.add((Node<T>) node.nodes[i]);
+            isAdded = true;
+        }
+        else {
+            Node<T> node = root;
+            Queue<Node<T>> queue = new LinkedList<>();
+
+            while (node != null) {
+                if (node.hasSpace() && node.add(value, branches)) {
+                    count += branches;
+                    curr += 1;
+                    isAdded = true;
+
+                    break;
                 }
-                node = queue.poll();
+                else {
+                    for (int i = 0; i < node.nodes.length; i++) {
+                        if (node.nodes[i] != null)
+                            queue.add((Node<T>) node.nodes[i]);
+                    }
+                    node = queue.poll();
+                }
             }
         }
 
         return isAdded;
     }
 
+    /**
+     * @param c - collection of T values
+     * @param branches - number of branches of each node
+     * @return - number of added elements
+     */
+    public int addAll(Collection<T> c, int branches) {
+        if (c.size() > count - curr)
+            return 0;
+
+        int added = 0;
+
+        for (T value : c) {
+            if (add(value, branches))
+                added += 1;
+        }
+
+        return added;
+    }
+
+    /**
+     * @param index - index of node to remove
+     * @return - true if element was removed, false otherwise
+     */
     public boolean remove(int index) {
-        if (index < 0 || index >= size)
+        if (index < 0 || index >= count)
             return false;
 
         boolean isRemoved = false;
@@ -67,13 +114,15 @@ public class Tree<T> {
         while (node != null) {
             if (id == index) {
                 int[] freeSize = node.removeAll();
-                size -= freeSize[0];
+                count -= freeSize[0];
                 curr -= freeSize[1] + 1;
 
                 if (prev != null) {
                     for (int i = 0; i < prev.nodes.length; i++) {
-                        if (prev.nodes[i] == node)
+                        if (prev.nodes[i] == node) {
                             prev.nodes[i] = null;
+                            break;
+                        }
                     }
                     prev.curr -= 1;
                 }
@@ -90,12 +139,40 @@ public class Tree<T> {
                 prev = node;
                 node = (Node<T>) queue.poll();
             }
+            id += 1;
         }
 
         return isRemoved;
     }
 
+    /**
+     * Removing all nodes in the tree
+     */
+    public void removeAll() {
+        Node<T> node = root;
+        Queue<Object> queue = new LinkedList<>();
+
+        while (node != null) {
+            for (int i = 0; i < node.nodes.length; i++) {
+                if (node.nodes[i] != null)
+                    queue.add(node.nodes[i]);
+                node.nodes[i] = null;
+            }
+            node = (Node<T>) queue.poll();
+        }
+
+        count = 0;
+        curr = 0;
+        root = null;
+    }
+
+    /**
+     * @return - array of T elements placed by left to right BFS
+     */
     public Object[] toArray() {
+        if (count < 1)
+            return new Object[0];
+
         Node<T> node = root;
         Queue<Object> queue = new LinkedList<>();
 

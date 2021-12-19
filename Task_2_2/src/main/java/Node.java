@@ -4,8 +4,8 @@ import java.util.Queue;
 class Node<T> {
     public T value;
     public final Object[] nodes;
-    public int size;
-    public int curr;
+    public int size; // size of nodes array
+    public int curr; // number of existing(not-null) elements in nodes array
 
     Node(T value, int branches) {
         this.value = value;
@@ -14,6 +14,11 @@ class Node<T> {
         curr = 0;
     }
 
+    /**
+     * @param value - value of T
+     * @param branches - number of branches of the node
+     * @return - true if node was added, false otherwise
+     */
     public boolean add(T value, int branches) {
         if (curr >= size)
             return false;
@@ -29,6 +34,9 @@ class Node<T> {
         return true;
     }
 
+    /**
+     * @return - array with length 2, where [0] is removed size, [1] is removed curr
+     */
     public int[] removeAll() {
         Queue<Object> queue = new LinkedList<>();
 
@@ -63,6 +71,9 @@ class Node<T> {
         return freeSize;
     }
 
+    /**
+     * @return - true if node has free(null) branch, false otherwise
+     */
     public boolean hasSpace() {
         return curr < size;
     }
