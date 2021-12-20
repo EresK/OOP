@@ -1,8 +1,6 @@
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
-public class Tree<T> {
+public class Tree<T> implements Iterable<T>{
     private Node<T> root;
     private int count; // Number of all possible nodes
     private int curr; // Number of existing(not-null) nodes
@@ -191,5 +189,47 @@ public class Tree<T> {
         }
 
         return array;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        Iterator<T> itr = new Iterator<T>() {
+            private Node<T> node;
+            private Queue<Object> queue;
+
+            @Override
+            public boolean hasNext() {
+                if (node == null)
+                    init();
+
+                return queue.peek() != null;
+            }
+
+            @Override
+            public T next() {
+                if (node == null)
+                    init();
+
+                node = (Node<T>) queue.poll();
+
+                if (node != null) {
+                    for (int i = 0; i < node.nodes.length; i++) {
+                        if (node.nodes[i] != null)
+                            queue.add(node.nodes[i]);
+                    }
+                }
+                else
+                    throw new NoSuchElementException("There is no next element in tree");
+
+                return node.value;
+            }
+
+            private void init() {
+                queue = new LinkedList<>();
+                queue.add(root);
+            }
+        };
+
+        return itr;
     }
 }

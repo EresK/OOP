@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 public class TestTree {
 
@@ -102,5 +103,34 @@ public class TestTree {
         Assertions.assertEquals(4, tree.getCurr());
 
         Assertions.assertArrayEquals(new Object[] {"the root", "Second", "Third", "Fourth"}, tree.toArray());
+    }
+
+    @Test
+    public void TestingIterator() {
+        Tree<String> tree = new Tree<>("string", 3);
+
+        Assertions.assertTrue(tree.hasSpace());
+        tree.add("another string", 1);
+        tree.add("second branch", 0);
+        tree.add("third branch", 0);
+
+        Iterator<String> iterator = tree.iterator();
+
+        // Testing iterator
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("string", iterator.next());
+
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("another string", iterator.next());
+
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("second branch", iterator.next());
+
+        Assertions.assertTrue(iterator.hasNext());
+        Assertions.assertEquals("third branch", iterator.next());
+
+        Assertions.assertFalse(iterator.hasNext());
+        Exception e = Assertions.assertThrows(Exception.class, ()-> iterator.next());
+        Assertions.assertEquals("There is no next element in tree", e.getMessage());
     }
 }
