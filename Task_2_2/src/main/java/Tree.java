@@ -4,11 +4,17 @@ public class Tree<T> implements Iterable<T>{
     private Node<T> root;
     private int count; // Number of all possible nodes
     private int curr; // Number of existing(not-null) nodes
+    private boolean isIterating;
 
+    /**
+     * @param value - value of T
+     * @param branches - number of branches of a root
+     */
     Tree(T value, int branches) {
         root = new Node<>(value, branches);
         count = 1 + branches;
         curr = 1;
+        isIterating = false;
     }
 
     /**
@@ -38,6 +44,9 @@ public class Tree<T> implements Iterable<T>{
      * @return - true if node was added, false otherwise
      */
     public boolean add(T value, int branches) {
+        if (isIterating)
+            throw new ConcurrentModificationException("Can not add elements while iterating by tree");
+
         if (branches < 0)
             return false;
 
@@ -81,6 +90,9 @@ public class Tree<T> implements Iterable<T>{
      * @return - number of added elements
      */
     public int addAll(Collection<T> c, int branches) {
+        if (isIterating)
+            throw new ConcurrentModificationException("Can not add elements while iterating by tree");
+
         if (c.size() > count - curr)
             return 0;
 
@@ -99,7 +111,10 @@ public class Tree<T> implements Iterable<T>{
      * @return - true if element was removed, false otherwise
      */
     public boolean remove(int index) {
-        if (index < 0 || index >= count)
+        if (isIterating)
+            throw new ConcurrentModificationException("Can not remove elements while iterating by tree");
+
+        if (index < 0 || index >= curr)
             return false;
 
         boolean isRemoved = false;
@@ -147,6 +162,9 @@ public class Tree<T> implements Iterable<T>{
      * Removing all nodes in the tree
      */
     public void removeAll() {
+        if (isIterating)
+            throw new ConcurrentModificationException("Can not remove elements while iterating by tree");
+
         Node<T> node = root;
         Queue<Object> queue = new LinkedList<>();
 
@@ -191,45 +209,45 @@ public class Tree<T> implements Iterable<T>{
         return array;
     }
 
+    private class TreeIterator<T> implements Iterator<T> {
+        private final Queue<Object> queue;
+
+        TreeIterator() {
+            queue = new LinkedList<>();
+            queue.add(root);
+            isIterating = true;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (queue.peek() == null)
+                isIterating = false;
+
+            return queue.peek() != null;
+        }
+
+        @Override
+        public T next() {
+            Node<T> node = (Node<T>) queue.poll();
+
+            if (node != null) {
+                for (int i = 0; i < node.nodes.length; i++) {
+                    if (node.nodes[i] != null)
+                        queue.add(node.nodes[i]);
+                }
+            }
+            else
+                throw new NoSuchElementException("There is no next element in the tree");
+
+            return node.value;
+        }
+    }
+
+    /**
+     * @return - iterator by elements in the tree
+     */
     @Override
     public Iterator<T> iterator() {
-        Iterator<T> itr = new Iterator<T>() {
-            private Node<T> node;
-            private Queue<Object> queue;
-
-            @Override
-            public boolean hasNext() {
-                if (node == null)
-                    init();
-
-                return queue.peek() != null;
-            }
-
-            @Override
-            public T next() {
-                if (node == null)
-                    init();
-
-                node = (Node<T>) queue.poll();
-
-                if (node != null) {
-                    for (int i = 0; i < node.nodes.length; i++) {
-                        if (node.nodes[i] != null)
-                            queue.add(node.nodes[i]);
-                    }
-                }
-                else
-                    throw new NoSuchElementException("There is no next element in tree");
-
-                return node.value;
-            }
-
-            private void init() {
-                queue = new LinkedList<>();
-                queue.add(root);
-            }
-        };
-
-        return itr;
+        return new TreeIterator<>();
     }
 }

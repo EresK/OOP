@@ -114,6 +114,14 @@ public class TestTree {
         tree.add("second branch", 0);
         tree.add("third branch", 0);
 
+        // Testing foreach
+        ArrayList<String> list = new ArrayList<>();
+        for (String s : tree) {
+            list.add(s);
+        }
+        Assertions.assertArrayEquals(list.toArray(),
+                new String[] {"string", "another string", "second branch", "third branch"});
+
         Iterator<String> iterator = tree.iterator();
 
         // Testing iterator
@@ -131,6 +139,21 @@ public class TestTree {
 
         Assertions.assertFalse(iterator.hasNext());
         Exception e = Assertions.assertThrows(Exception.class, ()-> iterator.next());
-        Assertions.assertEquals("There is no next element in tree", e.getMessage());
+        Assertions.assertEquals("There is no next element in the tree", e.getMessage());
+
+        // Testing ConcurrentModificationException
+        e = Assertions.assertThrows(Exception.class, () -> {
+            for (String s : tree) {
+                tree.add("extra string", 5);
+            }
+        });
+        Assertions.assertEquals("Can not add elements while iterating by tree", e.getMessage());
+
+        e = Assertions.assertThrows(Exception.class, () -> {
+            for (String s : tree) {
+                tree.remove(0);
+            }
+        });
+        Assertions.assertEquals("Can not remove elements while iterating by tree", e.getMessage());
     }
 }
