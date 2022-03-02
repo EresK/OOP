@@ -1,8 +1,8 @@
 public class PrimeNumber {
-    public boolean isAllPrime(long[] array) {
+    public boolean isAllPrime(long[] numbers) {
         boolean isPrimeFlag = true;
 
-        for (long num: array) {
+        for (long num: numbers) {
             if (!isPrime(num)) {
                 isPrimeFlag = false;
                 break;
