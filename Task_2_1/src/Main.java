@@ -8,7 +8,7 @@ public class Main {
         System.out.println(isPrimeFlag + ", " + isAllPrimeFlag);
 
         PrimeNumberThreads pnt = new PrimeNumberThreads();
-        boolean isPrime = pnt.isPrime(new int[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29}, 1);
+        boolean isPrime = pnt.isPrime(new int[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 101}, 1);
 
         System.out.println(isPrime);
     }

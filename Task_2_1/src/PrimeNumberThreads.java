@@ -3,15 +3,15 @@ public class PrimeNumberThreads {
         /* if (threadsNumber < 0) throws new Exception(); */
         int arraysSize = Math.min(numbers.length, threadsNumber);
         Thread[] threads = new Thread[arraysSize];
-        isPrimePart[] parts = new isPrimePart[arraysSize];
+        PrimePart[] parts = new PrimePart[arraysSize];
 
         int partSize = (numbers.length <= threadsNumber) ? 1 : (numbers.length / threadsNumber);
 
         for (int i = 0; i < arraysSize; i++) {
             if (i == arraysSize - 1)
-                parts[i] = new isPrimePart(numbers, partSize * i, numbers.length - 1);
+                parts[i] = new PrimePart(numbers, partSize * i, numbers.length - 1);
             else
-                parts[i] = new isPrimePart(numbers, partSize * i, partSize * (i + 1));
+                parts[i] = new PrimePart(numbers, partSize * i, partSize * (i + 1));
 
             threads[i] = new Thread(parts[i]);
             threads[i].start();
@@ -31,7 +31,7 @@ public class PrimeNumberThreads {
 
         boolean isPrimeFlag = true;
         for (int i = 0; i < arraysSize; i++) {
-            if (!parts[i].isPrimeFlag) {
+            if (!parts[i].isPrime()) {
                 isPrimeFlag = false;
                 break;
             }
@@ -40,13 +40,13 @@ public class PrimeNumberThreads {
         return isPrimeFlag;
     }
 
-    private class isPrimePart implements Runnable {
+    private class PrimePart implements Runnable {
         private final int begin;
         private final int end;
         private final int[] array;
         private boolean isPrimeFlag;
 
-        isPrimePart(int[] array, int begin, int end) {
+        PrimePart(int[] array, int begin, int end) {
             /*if (begin < 0 || end < 0 || begin >= array.length || end >= array.length)
                 throw new ArrayIndexOutOfBoundsException();*/
 
@@ -68,7 +68,7 @@ public class PrimeNumberThreads {
             }
         }
 
-        public boolean isPrimeFlag() {
+        public boolean isPrime() {
             return isPrimeFlag;
         }
 
