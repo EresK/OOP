@@ -1,12 +1,18 @@
+import javax.management.InvalidAttributeValueException;
+
 public class PrimeNumberThreads {
-    public boolean isPrime(int[] numbers, int threadsNumber) {
-        /* if (threadsNumber < 0) throws new Exception(); */
+    public boolean isPrime(int[] numbers, int threadsNumber) throws InvalidAttributeValueException {
+        if (threadsNumber < 1)
+            throw new InvalidAttributeValueException("Threads number must be positive");
+
         int arraysSize = Math.min(numbers.length, threadsNumber);
+
         Thread[] threads = new Thread[arraysSize];
         PrimePart[] parts = new PrimePart[arraysSize];
 
         int partSize = (numbers.length <= threadsNumber) ? 1 : (numbers.length / threadsNumber);
 
+        /* Creating new threads */
         for (int i = 0; i < arraysSize; i++) {
             if (i == arraysSize - 1)
                 parts[i] = new PrimePart(numbers, partSize * i, numbers.length - 1);
@@ -47,9 +53,6 @@ public class PrimeNumberThreads {
         private boolean isPrimeFlag;
 
         PrimePart(int[] array, int begin, int end) {
-            /*if (begin < 0 || end < 0 || begin >= array.length || end >= array.length)
-                throw new ArrayIndexOutOfBoundsException();*/
-
             this.array = array;
             this.begin = begin;
             this.end = end;
@@ -61,7 +64,7 @@ public class PrimeNumberThreads {
             isPrimeFlag = true;
 
             for (int i = begin; i <= end; i++) {
-                if (!isPrime(array[i])) {
+                if (!isPrimeNumber(array[i])) {
                     isPrimeFlag = false;
                     break;
                 }
@@ -72,9 +75,9 @@ public class PrimeNumberThreads {
             return isPrimeFlag;
         }
 
-        private boolean isPrime(long number) {
-            double numSqrt = Math.sqrt((double) number);
-            long numBound = Math.round(numSqrt);
+        private boolean isPrimeNumber(int number) {
+            double numSqrt = Math.sqrt(number);
+            int numBound = (int) Math.round(numSqrt);
 
             boolean isPrimeFlag = true;
 
@@ -83,7 +86,7 @@ public class PrimeNumberThreads {
                     isPrimeFlag = false;
             }
             else {
-                for (long i = 3; i <= numBound; i += 2) {
+                for (int i = 3; i <= numBound; i += 2) {
                     if (number % i == 0) {
                         isPrimeFlag = false;
                         break;

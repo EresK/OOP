@@ -1,15 +1,33 @@
 public class Main {
-    public static void main(String[] args) {
-        PrimeNumber pn = new PrimeNumber();
+    public static void main(String[] args) throws Exception {
+        int[] numbers = PrimeNumberGenerator.Generate(1000000);
 
-        boolean isPrimeFlag = pn.isPrime(127);
-        boolean isAllPrimeFlag = pn.isAllPrime(new long[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29});
+        /*long linearBeg, linearEnd;
+        PrimeNumber primeNumber = new PrimeNumber();
+        linearBeg = System.nanoTime();
+        boolean linear = primeNumber.isAllPrime(numbers);
+        linearEnd = System.nanoTime();
+        long linearDuration = linearEnd - linearBeg;
+        System.out.println("Linear: " + linear + " " + linearDuration);*/
 
-        System.out.println(isPrimeFlag + ", " + isAllPrimeFlag);
+        /*long multiBeg, multiEnd;
+        PrimeNumberThreads threads = new PrimeNumberThreads();
+        multiBeg = System.nanoTime();
+        boolean multiThread = threads.isPrime(numbers, 4);
+        multiEnd = System.nanoTime();
+        long multiDuration = multiEnd - multiBeg;
+        System.out.println("Multi: " + multiThread + " " + multiDuration);*/
 
-        PrimeNumberThreads pnt = new PrimeNumberThreads();
-        boolean isPrime = pnt.isPrime(new int[] {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 101}, 1);
+        /*long parallelBeg, parallelEnd;
+        PrimeNumberStream stream = new PrimeNumberStream();
+        parallelBeg = System.nanoTime();
+        boolean parallelStream = stream.isPrime(numbers);
+        parallelEnd = System.nanoTime();
+        long parallelDuration = parallelEnd - parallelBeg;
+        System.out.println("Parallel: " + parallelStream + " " + parallelDuration);*/
 
-        System.out.println(isPrime);
+        /*System.out.printf("Linear: %b\nMulti-thread: %b\nParallel stream: %b\n", linear, multiThread, parallelStream);
+        System.out.printf("Linear: %d\nMulti-thread: %d\nParallel stream: %d",
+                linearDuration, multiDuration, parallelDuration);*/
     }
 }

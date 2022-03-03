@@ -1,18 +1,11 @@
-public class PrimeNumber {
-    public boolean isAllPrime(int[] numbers) {
-        boolean isPrimeFlag = true;
+import java.util.Arrays;
 
-        for (int num: numbers) {
-            if (!isPrimeNumber(num)) {
-                isPrimeFlag = false;
-                break;
-            }
-        }
-
-        return isPrimeFlag;
+public class PrimeNumberStream {
+    public boolean isPrime(int[] numbers) {
+        return Arrays.stream(numbers).parallel().allMatch(this::isPrimeNumber);
     }
 
-    public boolean isPrimeNumber(int number) {
+    private boolean isPrimeNumber(int number) {
         double numSqrt = Math.sqrt(number);
         int numBound = (int) Math.round(numSqrt);
 
