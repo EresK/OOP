@@ -11,13 +11,20 @@ public class PrimeNumberThreads {
         PrimePart[] parts = new PrimePart[arraysSize];
 
         int partSize = (numbers.length <= threadsNumber) ? 1 : (numbers.length / threadsNumber);
+        int residue = numbers.length - partSize * threadsNumber;
+        int last = 0;
 
         /* Creating new threads */
         for (int i = 0; i < arraysSize; i++) {
-            if (i == arraysSize - 1)
-                parts[i] = new PrimePart(numbers, partSize * i, numbers.length - 1);
-            else
-                parts[i] = new PrimePart(numbers, partSize * i, partSize * (i + 1));
+            if (residue > 0) {
+                parts[i] = new PrimePart(numbers, last, last + partSize);
+                last += partSize + 1;
+                residue -= 1;
+            }
+            else {
+                parts[i] = new PrimePart(numbers, last, last + partSize - 1);
+                last += partSize;
+            }
 
             threads[i] = new Thread(parts[i]);
             threads[i].start();
