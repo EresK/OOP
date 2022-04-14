@@ -1,37 +1,30 @@
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Pizzeria {
-    private int pizzaMakerNum;
-    private int deliverymanNum;
-    private int orderSize;
-    private int stockSize;
+    private int orderQueueSize;
+    private int stockQueueSize;
 
-    /* Разделяемые ресурсы */
-    private final ReentrantLock orderLock;
-    private final ArrayList<Order> orderQueue; // очередь заказов
+    private final ArrayList<PizzaMan> pizzaMen;
+    private final ArrayList<DeliveryMan> deliveryMen;
+    private final OrderQueue<Order> orderQueue;
+    private final OrderQueue<Order> stockQueue;
 
-    private final ReentrantLock stockLock;
-    private final ArrayList<Order> stockQueue; // складская очередь
+    Pizzeria(int orderQueueSize, int stockQueueSize,
+             ArrayList<PizzaMan> pizzaMen, ArrayList<DeliveryMan> deliveryMen) throws IllegalArgumentException {
+        if (pizzaMen.size() < 1 || deliveryMen.size() < 1)
+            throw new IllegalArgumentException("Arrays must contain elements");
 
-    Pizzeria(int pizzaMakerNum, int deliverymanNum, int orderSize, int stockSize) {
-        this.pizzaMakerNum = pizzaMakerNum;
-        this.deliverymanNum = deliverymanNum;
-        this.orderSize = orderSize;
-        this.stockSize = stockSize;
+        this.orderQueueSize = orderQueueSize;
+        this.stockQueueSize = stockQueueSize;
 
-        orderLock = new ReentrantLock();
-        orderQueue = new ArrayList<>(orderSize);
+        this.pizzaMen = pizzaMen;
+        this.deliveryMen = deliveryMen;
 
-        stockLock = new ReentrantLock();
-        stockQueue = new ArrayList<>(stockSize);
+        orderQueue = new OrderQueue<>(orderQueueSize);
+        stockQueue = new OrderQueue<>(stockQueueSize);
     }
 
-    public void start() {
-
-    }
-
-    public void makeAnOrder() {
+    public void run() {
 
     }
 }

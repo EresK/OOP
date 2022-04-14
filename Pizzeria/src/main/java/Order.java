@@ -1,12 +1,12 @@
 public class Order {
-    private final String name;
-    private final int orderId;
+    protected final String name;
+    protected final int id;
 
     protected State state;
 
-    Order (String name, int orderId) {
+    Order(String name, int id) {
         this.name = name;
-        this.orderId = orderId;
+        this.id = id;
         state = State.ORDERED;
     }
 }
