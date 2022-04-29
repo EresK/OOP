@@ -2,24 +2,32 @@ import java.util.ArrayList;
 
 public class OrderQueue<T> {
     private final ArrayList<T> list;
-    private int maxSize;
+    private final int maxSize;
 
     OrderQueue(int size) {
         list = new ArrayList<>();
         this.maxSize = size;
     }
 
-    public boolean push(T value) throws ArrayStoreException {
-        return (list.size() + 1 <= maxSize) && list.add(value);
+    public boolean push(T value) {
+        if (list.size() + 1 > maxSize)
+            return false;
+
+        return list.add(value);
     }
 
     public T pop() {
-        return list.size() > 0 ? list.remove(0) : null;
+        if (list.size() > 0)
+            return list.remove(0);
+
+        return null;
     }
 
     public int getMaxSize() {
         return maxSize;
     }
 
-    public int getSize() { return list.size(); }
+    public int getSize() {
+        return list.size();
+    }
 }
