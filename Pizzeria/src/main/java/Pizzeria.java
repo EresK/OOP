@@ -13,6 +13,7 @@ public class Pizzeria {
              ArrayList<Integer> experiences, ArrayList<Integer> backpackSizes) {
         orderQueue = new OrderQueue<>(orderQueueSize);
         stockQueue = new OrderQueue<>(stockQueueSize);
+        this.orderCreators = orderCreators;
 
         makers = new ArrayList<>();
         deliverers = new ArrayList<>();
@@ -22,8 +23,6 @@ public class Pizzeria {
 
         for (int i = 0; i < backpackSizes.size(); i++)
             deliverers.add(new Deliverer(i, backpackSizes.get(i), this));
-
-        this.orderCreators = orderCreators;
     }
 
     public void run() {
