@@ -3,13 +3,11 @@ import java.util.Random;
 public class PizzaBuilder {
     private final Random random = new Random();
 
-    private final String[] names = {"Нью Йорк", "Сицилия",
-            "Четыре сыра" , "Пепперони",
-            "Охотничья", "Вегетарианская"};
+    private final String[] names = {"New York", "Sicilian",
+            "Four Cheese" , "Pepperoni", "Hawaiian", "Vegetarian"};
 
-    private final String[] ingredients = {"", "с сыром", "с грибами",
-            "с чесноком", "с ананасом",
-            "с колбаской", "с курицей"};
+    private final String[] ingredients = {"classic", "with cheese", "with mushrooms",
+            "with garlic", "with pineapple", "with sausage", "with chicken"};
 
     public String build() {
         return names[random.nextInt(0, names.length - 1)] + " " +

@@ -7,14 +7,13 @@ import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
-        String fileMakers = "/home/eres/IdeaProjects/Pizzeria2/src/main/resources/makers";
-        String fileDeliverers = "/home/eres/IdeaProjects/Pizzeria2/src/main/resources/deliverers";
-
-        Scanner scanner = new Scanner(System.in);
+        String fileMakers = "./src/main/resources/makers";
+        String fileDeliverers = "./src/main/resources/deliverers";
 
         ArrayList<Integer> makers = new ArrayList<>();
         ArrayList<Integer> deliverers = new ArrayList<>();
 
+        Scanner scanner = new Scanner(System.in);
         System.out.println("enter:\n" +
                 "\"run\" - to run a pizzeria\n" +
                 "\"add p number\" to add pizza maker, number - experience\n" +
@@ -35,7 +34,7 @@ public class Program {
             if (in.length == 1 || in.length == 3) {
                 switch (in[0]) {
                     case "run":
-                        runPizzeria(fileMakers, fileDeliverers);
+                        runPizzeria(fileMakers, fileDeliverers, 5, 5, 2);
                         break;
 
                     case "add":
@@ -59,9 +58,10 @@ public class Program {
         }
     }
 
-    private static void runPizzeria(String filenamePizzaMakers, String filenameDeliverers) {
-        File filePMs = new File(filenamePizzaMakers);
-        File fileDs = new File(filenameDeliverers);
+    private static void runPizzeria(String fileMakers, String fileDeliverers,
+                                    int orderQueueSize, int stockQueueSize, int orderCreators) {
+        File filePMs = new File(fileMakers);
+        File fileDs = new File(fileDeliverers);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,7 +69,7 @@ public class Program {
             ArrayList<Integer> makers = objectMapper.readValue(filePMs, new TypeReference<>(){});
             ArrayList<Integer> deliverers = objectMapper.readValue(fileDs, new TypeReference<>() {});
 
-            Pizzeria pizzeria = new Pizzeria(5, 5, makers, deliverers);
+            Pizzeria pizzeria = new Pizzeria(orderQueueSize, stockQueueSize, orderCreators, makers, deliverers);
             pizzeria.run();
         }
         catch (Exception ex) {

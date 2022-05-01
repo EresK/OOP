@@ -7,8 +7,9 @@ public class Pizzeria {
     private final OrderQueue<Order> stockQueue;
     private final ArrayList<PizzaMaker> makers;
     private final ArrayList<Deliverer> deliverers;
+    private final int orderCreators;
 
-    Pizzeria(int orderQueueSize, int stockQueueSize,
+    Pizzeria(int orderQueueSize, int stockQueueSize, int orderCreators,
              ArrayList<Integer> experiences, ArrayList<Integer> backpackSizes) {
         orderQueue = new OrderQueue<>(orderQueueSize);
         stockQueue = new OrderQueue<>(stockQueueSize);
@@ -16,38 +17,26 @@ public class Pizzeria {
         makers = new ArrayList<>();
         deliverers = new ArrayList<>();
 
-        for (Integer exp : experiences)
-            makers.add(new PizzaMaker(exp, this));
+        for (int i = 0; i < experiences.size(); i++)
+            makers.add(new PizzaMaker(i, experiences.get(i), this));
 
-        for (Integer size : backpackSizes)
-            deliverers.add(new Deliverer(size, this));
+        for (int i = 0; i < backpackSizes.size(); i++)
+            deliverers.add(new Deliverer(i, backpackSizes.get(i), this));
+
+        this.orderCreators = orderCreators;
     }
 
     public void run() {
         ExecutorService pool = Executors.newFixedThreadPool(16);
 
-        //pool.submit(new OrderCreator(this));
+        for (int i = 0; i < orderCreators; i++)
+            pool.submit(new OrderCreator(this));
 
-        /*orderQueue.push(new Order("Pizza", 1));
-        pool.submit(makers.get(0));
-        pool.submit(deliverers.get(0));*/
-
-        /*for (PizzaMaker p : makers)
+        for (PizzaMaker p : makers)
             pool.submit(p);
 
         for (Deliverer d : deliverers)
-            pool.submit(d);*/
-
-        Thread[] threads = new Thread[16];
-
-        threads[0] = new Thread(new OrderCreator(this));
-        threads[0].start();
-
-        threads[1] = new Thread(new PizzaMaker(1, this));
-        threads[1].start();
-
-        threads[2] = new Thread(new Deliverer(3, this));
-        threads[2].start();
+            pool.submit(d);
     }
 
     protected synchronized boolean addToOrder(Order order) {

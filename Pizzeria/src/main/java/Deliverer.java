@@ -4,10 +4,12 @@ import java.util.Random;
 public class Deliverer implements Runnable {
     private final Pizzeria pizzeria;
     private final Random random;
-    private int backpackSize;
     private final ArrayList<Order> backpack;
+    private int backpackSize;
+    private int id;
 
-    Deliverer(int backpackSize, Pizzeria pizzeria) {
+    Deliverer(int id, int backpackSize, Pizzeria pizzeria) {
+        this.id = id;
         this.backpackSize = backpackSize;
         backpack = new ArrayList<>();
 
@@ -27,7 +29,7 @@ public class Deliverer implements Runnable {
 
     private void deliver(Order order) {
         try {
-            long time = random.nextLong(1000, 1500);
+            long time = random.nextLong(1500, 2000);
             Thread.sleep(time);
         }
         catch (Exception exception) {
@@ -35,6 +37,6 @@ public class Deliverer implements Runnable {
         }
 
         order.state = State.DELIVERED;
-        System.out.printf("%s [%d]: %s\n", order.name, order.id, order.state);
+        System.out.printf("%s [%d]: %s - deliverer[%d]\n", order.name, order.id, order.state, id);
     }
 }

@@ -4,8 +4,10 @@ public class PizzaMaker implements Runnable {
     private final Pizzeria pizzeria;
     private final Random random;
     private int experience;
+    private int id;
 
-    PizzaMaker(int experience, Pizzeria pizzeria) {
+    PizzaMaker(int id, int experience, Pizzeria pizzeria) {
+        this.id = id;
         this.experience = experience;
         this.pizzeria = pizzeria;
         random = new Random();
@@ -24,10 +26,10 @@ public class PizzaMaker implements Runnable {
 
     private void cook(Order order) {
         order.state = State.COOKING;
-        System.out.printf("%s [%d]: %s\n", order.name, order.id, order.state);
+        System.out.printf("%s [%d]: %s by [%d]\n", order.name, order.id, order.state, id);
 
         try {
-            long time = random.nextLong(500, 1000);
+            long time = random.nextLong(1000, 1500);
             Thread.sleep(time * (long)experience);
         }
         catch (Exception exception) {
@@ -35,6 +37,6 @@ public class PizzaMaker implements Runnable {
         }
 
         order.state = State.COOKED;
-        System.out.printf("%s [%d]: %s\n", order.name, order.id, order.state);
+        System.out.printf("%s [%d]: %s by [%d]\n", order.name, order.id, order.state, id);
     }
 }
