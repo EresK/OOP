@@ -35,8 +35,7 @@ public class Deliverer implements Runnable {
         catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
-
         order.state = State.DELIVERED;
-        System.out.printf("%s [%d]: %s - deliverer[%d]\n", order.name, order.id, order.state, id);
+        System.out.printf("%s [%d]: DELIVERED - deliverer[%d]\n", order.name, order.id, id);
     }
 }

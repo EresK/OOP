@@ -15,12 +15,11 @@ public class OrderCreator implements Runnable {
     @Override
     public void run() {
         while (true) {
-            Order order = new Order(builder.build(), (int)(new Date().getTime()));
+            Order order = new Order(builder.build(), pizzeria.getId());
             pizzeria.addToOrder(order);
 
-            System.out.printf("%s [%d]: %s\n", order.name, order.id, order.state);
             try {
-                long time = random.nextLong(750, 1500);
+                long time = random.nextLong(1000, 1750);
                 Thread.sleep(time);
             }
             catch (Exception ex) {

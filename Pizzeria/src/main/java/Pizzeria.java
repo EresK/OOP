@@ -8,12 +8,15 @@ public class Pizzeria {
     private final ArrayList<PizzaMaker> makers;
     private final ArrayList<Deliverer> deliverers;
     private final int orderCreators;
+    private int id;
 
     Pizzeria(int orderQueueSize, int stockQueueSize, int orderCreators,
              ArrayList<Integer> experiences, ArrayList<Integer> backpackSizes) {
         orderQueue = new OrderQueue<>(orderQueueSize);
         stockQueue = new OrderQueue<>(stockQueueSize);
+
         this.orderCreators = orderCreators;
+        id = 0;
 
         makers = new ArrayList<>();
         deliverers = new ArrayList<>();
@@ -38,22 +41,74 @@ public class Pizzeria {
             pool.submit(d);
     }
 
-    protected synchronized boolean addToOrder(Order order) {
-        return orderQueue.push(order);
+    protected synchronized int getId() {
+        return id++;
     }
 
-    protected synchronized boolean addToStock(Order order) {
-        return stockQueue.push(order);
+    protected void addToOrder(Order order) {
+        try {
+            synchronized (orderQueue) {
+                do {
+                    if (!orderQueue.push(order))
+                        orderQueue.wait();
+                    else {
+                        System.out.printf("%s [%d]: ORDERED\n", order.name, order.id);
+                        break;
+                    }
+                } while (true);
+            }
+        }
+        catch (InterruptedException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
-    protected synchronized Order getFromOrder() {
-        return orderQueue.pop();
+    protected void addToStock(Order order, int makerId) {
+        try {
+            synchronized (stockQueue) {
+                do {
+                    if (!stockQueue.push(order))
+                        stockQueue.wait();
+                    else {
+                        System.out.printf("%s [%d]: COOKED by [%d]\n", order.name, order.id, makerId);
+                        break;
+                    }
+                } while (true);
+            }
+        }
+        catch (InterruptedException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
-    protected synchronized void getFromStock(int backpackSize, ArrayList<Order> backpack) {
-        int min = Math.min(backpackSize, stockQueue.getSize());
+    protected Order getFromOrder() {
+        Order order = null;
+        try {
+            synchronized (orderQueue) {
+                order = orderQueue.pop();
+                orderQueue.notifyAll();
+            }
+        }
+        catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
 
-        for (int i = 0; i < min; i++)
-            backpack.add(stockQueue.pop());
+        return order;
+    }
+
+    protected void getFromStock(int backpackSize, ArrayList<Order> backpack) {
+        try {
+            synchronized (stockQueue) {
+                int min = Math.min(backpackSize, stockQueue.getSize());
+
+                for (int i = 0; i < min; i++)
+                    backpack.add(stockQueue.pop());
+
+                stockQueue.notifyAll();
+            }
+        }
+        catch (IllegalMonitorStateException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 }

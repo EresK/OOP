@@ -19,14 +19,14 @@ public class PizzaMaker implements Runnable {
             Order order = pizzeria.getFromOrder();
             if (order != null) {
                 cook(order);
-                pizzeria.addToStock(order);
+                pizzeria.addToStock(order, id);
             }
         }
     }
 
     private void cook(Order order) {
         order.state = State.COOKING;
-        System.out.printf("%s [%d]: %s by [%d]\n", order.name, order.id, order.state, id);
+        System.out.printf("%s [%d]: COOKING by [%d]\n", order.name, order.id, id);
 
         try {
             long time = random.nextLong(1000, 1500);
@@ -35,8 +35,6 @@ public class PizzaMaker implements Runnable {
         catch (Exception exception) {
             System.err.println(exception.getMessage());
         }
-
         order.state = State.COOKED;
-        System.out.printf("%s [%d]: %s by [%d]\n", order.name, order.id, order.state, id);
     }
 }
