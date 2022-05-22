@@ -27,6 +27,10 @@ public class Deliverer implements Runnable {
         }
     }
 
+    public int getBackpackSize() {
+        return backpackSize;
+    }
+
     private void deliver(Order order) {
         try {
             long time = random.nextLong(1500, 2000);

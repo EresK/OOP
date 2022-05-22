@@ -1,7 +1,10 @@
+import com.fasterxml.jackson.annotation.*;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@JsonPropertyOrder({"orderSize", "stockSize", "orderCreators", "experiences", "backpackSizes"})
 public class Pizzeria {
     private final OrderQueue<Order> orderQueue;
     private final OrderQueue<Order> stockQueue;
@@ -9,6 +12,24 @@ public class Pizzeria {
     private final ArrayList<Deliverer> deliverers;
     private final int orderCreators;
     private int id;
+
+    Pizzeria(int orderQueueSize, int stockQueueSize, int orderCreators,
+             int[] experiences, int[] backpackSizes) {
+        orderQueue = new OrderQueue<>(orderQueueSize);
+        stockQueue = new OrderQueue<>(stockQueueSize);
+
+        this.orderCreators = orderCreators;
+        id = 0;
+
+        makers = new ArrayList<>();
+        deliverers = new ArrayList<>();
+
+        for (int i = 0; i < experiences.length; i++)
+            makers.add(new PizzaMaker(i, experiences[i], this));
+
+        for (int i = 0; i < backpackSizes.length; i++)
+            deliverers.add(new Deliverer(i, backpackSizes[i], this));
+    }
 
     Pizzeria(int orderQueueSize, int stockQueueSize, int orderCreators,
              ArrayList<Integer> experiences, ArrayList<Integer> backpackSizes) {
@@ -41,6 +62,37 @@ public class Pizzeria {
             pool.submit(d);
     }
 
+    @JsonGetter("orderSize")
+    public int getOrderQueueSize() {
+        return orderQueue.getMaxSize();
+    }
+
+    @JsonGetter("stockSize")
+    public int getStockQueueSize() {
+        return stockQueue.getMaxSize();
+    }
+
+    @JsonGetter("orderCreators")
+    public int getOrderCreators() {
+        return orderCreators;
+    }
+
+    @JsonGetter("experiences")
+    public ArrayList<Integer> getExperiences() {
+        ArrayList<Integer> experiences = new ArrayList<>();
+        for (PizzaMaker p : makers)
+            experiences.add(p.getExperience());
+        return experiences;
+    }
+
+    @JsonGetter("backpackSizes")
+    public ArrayList<Integer> getBackpackSizes() {
+        ArrayList<Integer> backpackSizes = new ArrayList<>();
+        for (Deliverer d : deliverers)
+            backpackSizes.add(d.getBackpackSize());
+        return backpackSizes;
+    }
+
     protected synchronized int getId() {
         return id++;
     }
@@ -70,7 +122,7 @@ public class Pizzeria {
                     if (!stockQueue.push(order))
                         stockQueue.wait();
                     else {
-                        System.out.printf("%s [%d]: COOKED by [%d]\n", order.name, order.id, makerId);
+                        System.out.printf("%s [%d]: ADDED TO STOCK by [%d]\n", order.name, order.id, makerId);
                         break;
                     }
                 } while (true);

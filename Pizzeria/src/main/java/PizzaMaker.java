@@ -24,6 +24,10 @@ public class PizzaMaker implements Runnable {
         }
     }
 
+    public int getExperience() {
+        return experience;
+    }
+
     private void cook(Order order) {
         order.state = State.COOKING;
         System.out.printf("%s [%d]: COOKING by [%d]\n", order.name, order.id, id);
@@ -36,5 +40,6 @@ public class PizzaMaker implements Runnable {
             System.err.println(exception.getMessage());
         }
         order.state = State.COOKED;
+        System.out.printf("%s [%d]: COOKED by [%d]\n", order.name, order.id, id);
     }
 }
