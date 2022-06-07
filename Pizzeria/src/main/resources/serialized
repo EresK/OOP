@@ -1,0 +1,7 @@
+{
+  "orderSize" : 15,
+  "stockSize" : 10,
+  "orderCreators" : 1,
+  "experiences" : [ 1, 2, 3 ],
+  "backpackSizes" : [ 5, 5, 5 ]
+}
